@@ -1,0 +1,63 @@
+with "config/litex_hal_config.gpr";
+with "bare_runtime.gpr";
+project Litex_Hal is
+
+   for Languages use ("Ada", "ASM_CPP");
+
+   for Target use "riscv64-elf";
+   for Runtime ("Ada") use Bare_Runtime'Runtime ("Ada");
+
+   for Library_Name use "Litex_Hal";
+   for Library_Version use Project'Library_Name & ".so." & Litex_Hal_Config.Crate_Version;
+
+   for Source_Dirs use ("src/**", "config/");
+   for Object_Dir use "obj/" & Litex_Hal_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Library_Dir use "lib";
+
+   type Library_Type_Type is ("relocatable", "static", "static-pic");
+   Library_Type : Library_Type_Type :=
+     external ("LITEX_HAL_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+   for Library_Kind use Library_Type;
+
+   package Device_Configuration is
+
+      for Number_Of_Interrupts use "2";
+      for Memories use ("rom", "sram", "main_ram", "csr");
+      for Boot_Memory use "main_ram";
+
+      --  Specification of the rom
+      for Mem_Kind ("rom") use "rom";
+      for Address ("rom") use "0x00000000";
+      for Size ("rom") use "0x00020000";
+
+      --  Specification of the sram
+      for Mem_Kind ("sram") use "ram";
+      for Address ("sram") use "0x10000000";
+      for Size ("sram") use "0x00002000";
+
+      --  Specification of the main_ram
+      for Mem_Kind ("main_ram") use "ram";
+      for Address ("main_ram") use "0x40000000";
+      for Size ("main_ram") use "0x02000000";
+
+      --  Specification of the csr
+      for Mem_Kind ("csr") use "ram";
+      for Address ("csr") use "0xf0000000";
+      for Size ("csr") use "0x00010000";
+
+   end Device_Configuration;
+
+   package Compiler is
+      for Default_Switches ("Ada") use Litex_Hal_Config.Ada_Compiler_Switches & ("-gnat2022");
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+end Litex_Hal;

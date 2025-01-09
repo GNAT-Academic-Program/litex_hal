@@ -1,0 +1,72 @@
+Install alire, this will get you our gnat suite with gcc and g++. 
+As long as youo have their resident folder on your path, everything will build.
+Make sure you have a recent python ~>= 3.5
+
+
+git clone --recurse-submodules https://github.com/YosysHQ/yosys.git
+cd yosys
+make -j$(nproc)
+sudo make install
+
+git clone --recurse-submodules https://github.com/YosysHQ/prjtrellis
+cd prjtrellis/libtrellis
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local .
+make
+sudo make install
+
+sudo apt install libboost-all-dev libeigen3-dev
+git clone --recurse-submodules https://github.com/YosysHQ/nextpnr
+cd nextpnr
+cmake . -DARCH=ecp5 -DTRELLIS_INSTALL_PREFIX=/usr/local
+make -j$(nproc)
+sudo make install
+
+git clone https://github.com/kost/fujprog
+mkdir build && cd build
+cmake ..
+make
+sudo make install
+
+
+Install litex
+python3 -m litex_boards.targets.radiona_ulx3s --device=LFE5U-85F --build
+
+
+Make sure the board is recognized
+lsusb
+
+
+Make a new udev rule
+sudo nano /etc/udev/rules.d/53-lattice-ftdi.rules
+
+Add content
+SUBSYSTEM=="usb", ATTR{idVendor}=="0403", ATTR{idProduct}=="6010", GROUP="plugdev", MODE="0666"
+SUBSYSTEM=="usb", ATTR{idVendor}=="0403", ATTR{idProduct}=="6014", GROUP="plugdev", MODE="0666"
+SUBSYSTEM=="usb", ATTR{idVendor}=="0403", ATTR{idProduct}=="6015", GROUP="plugdev", MODE="0666"
+
+Reload the udev rules:
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+Add your user to the plugdev group:
+sudo usermod -aG plugdev $USER
+
+
+Program the radiona_ulx3s
+fujprog build/radiona_ulx3s/gateware/radiona_ulx3s.bit
+
+
+python3 -m litex_boards.targets.radiona_ulx3s --device=LFE5U-85F --integrated-rom-init=/home/henley/Desktop/ulx3_litex_experiment/ada_bios/bin/main.bin --build
+
+
+riscv64-elf-objcopy -O binary bin/main bin/main.bin
+
+sudo dmesg | grep ttyUSB
+
+litex_term /dev/ttyUSBX --kernel bin/main
+
+once on litex console:
+
+> reboot
+
+(should see the firmware upload)
