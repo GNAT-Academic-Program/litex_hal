@@ -5,26 +5,6 @@ with Soc; use Soc;
 with Soc.Leds; use Soc.Leds;
 
 package body Leds is
-   
-   --  type Leds_Register_T is (Output);
-
-   --  type Output_Reg_T is record
-   --     Leds     : Led_States;
-   --     Reserved : U24;
-   --  end record with size => U32'Size;
-
-   --  for Output_Reg_T use record
-   --     Leds  at 0 range 0 .. 7;
-   --     Reserved at 1 range 0 .. 23;
-   --  end record;
-
-   --  type Leds_Registers_T is array (Leds_Register_T) of Register_Descriptor_T;
-   --  Leds_Registers : constant Leds_Registers_T :=
-   --    (Output      => (Address     => 16#F000_1000#, 
-   --                     Rst_Value   => 16#0000_0000#, 
-   --                     Access_Type => Rw));
-
-   --  Output_Reg : Output_Reg_T with Address => To_Address (16#F000_1000#);
 
    Leds : Led_States with Address => LEDS_Periph.OUT_k'Address;
    
