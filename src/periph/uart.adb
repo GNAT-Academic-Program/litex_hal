@@ -15,8 +15,8 @@ package body Uart is
    procedure Init (Clk_Freq : Natural; Baud_Rate : Natural) is
    begin
       Wait_Count := (Clk_Freq / Baud_Rate) * 10;
-      UART_Periph.EV_PENDING.TX := 0;
-      UART_Periph.EV_PENDING.RX := 0;
+      UART_Periph.EV_PENDING.TX := 1;
+      UART_Periph.EV_PENDING.RX := 1;
       UART_Periph.EV_ENABLE.TX := 1;
       UART_Periph.EV_ENABLE.RX := 1;
    end Init;

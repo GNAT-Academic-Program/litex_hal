@@ -6,8 +6,4 @@ package body Utils is
       end loop;
    end Exit_Handler;
 
-   procedure Isr is
-   begin
-      null;
-   end Isr;
 end Utils;

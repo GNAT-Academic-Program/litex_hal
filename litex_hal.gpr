@@ -2,7 +2,7 @@ with "config/litex_hal_config.gpr";
 with "bare_runtime.gpr";
 project Litex_Hal is
 
-   for Languages use ("Ada", "ASM_CPP");
+   for Languages use ("Ada", "ASM_CPP", "C");
 
    for Target use "riscv64-elf";
    for Runtime ("Ada") use Bare_Runtime'Runtime ("Ada");

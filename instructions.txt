@@ -56,7 +56,7 @@ Program the radiona_ulx3s
 fujprog build/radiona_ulx3s/gateware/radiona_ulx3s.bit
 
 
-python3 -m litex_boards.targets.radiona_ulx3s --device=LFE5U-85F --integrated-rom-init=/home/henley/Desktop/ulx3_litex_experiment/ada_bios/bin/main.bin --build
+python3 -m litex_boards.targets.radiona_ulx3s --device=LFE5U-85F --csr-svd=toto_csr.svd --integrated-rom-init=/home/henley/Desktop/ulx3_litex_experiment/ada_bios/bin/main.bin --build
 
 
 riscv64-elf-objcopy -O binary bin/main bin/main.bin
